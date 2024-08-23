@@ -1,11 +1,9 @@
-import "./App.css";
-
 function App() {
   return (
-    <>
-      <h1>पुरानी Kitabe</h1>
-      <div className="card">No Books found!</div>
-    </>
+    <div className="min-w-72 flex flex-col justify-center items-center py-4">
+      <h1 className="text-3xl font-bold underline">पुरानी Kitabe</h1>
+      <div className="mt-4">No Books found!</div>
+    </div>
   );
 }
 

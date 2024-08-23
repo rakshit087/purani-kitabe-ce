@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Found!</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .book-details {
+            margin-bottom: 15px;
+        }
+        .book-cover {
+            max-width: 100px;
+            float: left;
+            margin-right: 10px;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <h2>Book Found!</h2>
+    <div id="bookDetails" class="book-details clearfix"></div>
+    <h3>Other Results:</h3>
+    <div id="otherResults"></div>
+    <script src="./scripts/popup.js"></script>
+</body>
+</html>

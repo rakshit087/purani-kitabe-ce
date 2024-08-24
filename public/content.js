@@ -36,28 +36,20 @@ function extractProductDetails() {
         { action: "makeRequest", query: queryParams },
         (response) => {
           console.log(response.data);
-          const matchingBook = response.data.books.find(
-            (book) =>
-              book.isbn === isbn10 || book.isbn === isbn13.replace(/-/g, "")
-          );
-          if (matchingBook) {
-            // Show popup with matching book and other results
-            chrome.runtime.sendMessage({
-              action: "updatePopup",
-              matchingBook: matchingBook,
-              otherResults: response.data.books.filter(
-                (book) => book !== matchingBook
-              ),
+          chrome.storage.local.set({ books: response.data.books }, () => {
+            chrome.action.setBadgeText({
+              text: "!",
             });
-          } else {
-            chrome.runtime.sendMessage({
-              action: "updatePopup",
-              matchingBook: null,
-              otherResults: response.data.books,
-            });
-          }
+            chrome.action.setBadgeBackgroundColor({ color: "#9688F1" });
+          });
         }
       );
+    } else {
+      chrome.storage.local.remove("books", () => {
+        chrome.action.setBadgeText({
+          text: "",
+        });
+      });
     }
   }
 }

@@ -5,5 +5,17 @@
   "version": "1.0",
   "action": {
     "default_popup": "index.html"
+  },
+  "host_permissions": ["https://puranikitabay.vercel.app/*"],
+  "permissions": ["activeTab", "storage", "notifications"],
+  "content_scripts": [
+    {
+      "js": ["./content.js"],
+      "matches": ["https://www.amazon.in/*"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "./background.js"
   }
 }

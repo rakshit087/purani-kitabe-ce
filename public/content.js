@@ -31,11 +31,16 @@ function extractProductDetails() {
       const isbn10 = product_details["isbn10"] || "";
       const isbn13 = (product_details["isbn13"] || "").replace(/-/g, "");
       const bookTitle = document.querySelector("#productTitle").innerHTML;
-      const queryParams = `${isbn10} ${isbn13} ${bookTitle}`;
       chrome.runtime.sendMessage(
-        { action: "makeRequest", query: queryParams },
+        {
+          action: "makeRequest",
+          query: {
+            isbn10: isbn10,
+            isbn13: isbn13,
+            title: bookTitle,
+          },
+        },
         (response) => {
-          console.log(response.data);
           chrome.storage.local.set({ books: response.data.books }, () => {
             chrome.action.setBadgeText({
               text: "!",

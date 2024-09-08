@@ -31,6 +31,13 @@ function extractProductDetails() {
       const isbn10 = product_details["isbn10"] || "";
       const isbn13 = (product_details["isbn13"] || "").replace(/-/g, "");
       const bookTitle = document.querySelector("#productTitle").innerHTML;
+      chrome.storage.local.set({
+        state: {
+          applicationState: "loading",
+          searchQuery: bookTitle.trim(),
+          books: [],
+        },
+      });
       chrome.runtime.sendMessage(
         {
           action: "makeRequest",
@@ -41,16 +48,24 @@ function extractProductDetails() {
           },
         },
         (response) => {
-          chrome.storage.local.set({ books: response.data.books }, () => {
-            chrome.action.setBadgeText({
-              text: "!",
-            });
-            chrome.action.setBadgeBackgroundColor({ color: "#9688F1" });
-          });
+          chrome.storage.local.set(
+            {
+              state: {
+                applicationState: response.success ? "success" : "error",
+                searchQuery: bookTitle.trim(),
+                books: response.books,
+              },
+            },
+            () => {
+              chrome.action.setBadgeText({
+                text: response.books.length,
+              });
+            }
+          );
         }
       );
     } else {
-      chrome.storage.local.remove("books", () => {
+      chrome.storage.local.remove("state", () => {
         chrome.action.setBadgeText({
           text: "",
         });

@@ -1,21 +1,31 @@
 import { useEffect, useState } from "react";
 import { Book } from "./types/BookType";
-import { BookCard } from "./components/BookCard";
+import BookSearchResults from "./components/BookSearchResults";
 
 function App() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [applicationState, setApplicationState] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
+
   useEffect(() => {
-    chrome.storage.local.get(["books"], (result) => {
-      if (result.books) {
-        setBooks(result.books);
-        chrome.action.setBadgeText({ text: "" });
+    chrome.storage.local.get(["state"], (result) => {
+      if (result.state) {
+        if (result.state.applicationState) {
+          setApplicationState(result.state.applicationState);
+        }
+        if (result.state.books) {
+          setBooks(result.state.books);
+        }
       }
     });
     const listener = (changes: {
       [key: string]: chrome.storage.StorageChange;
     }) => {
-      if (changes.books) {
-        setBooks(changes.books.newValue);
+      console.log("changes: ", changes.state);
+      if (changes.state) {
+        setBooks(changes.state.newValue.books);
+        setApplicationState(changes.state.newValue.applicationState);
       }
     };
     chrome.storage.onChanged.addListener(listener);
@@ -23,16 +33,11 @@ function App() {
       chrome.storage.onChanged.removeListener(listener);
     };
   }, []);
+
   return (
     <div className="min-w-80 flex flex-col justify-center items-center py-4 px-4">
       <h1 className="text-3xl font-bold underline">पुरानी Kitabe</h1>
-      {books ? (
-        books.map((book, index) => {
-          return <BookCard book={book} key={index} />;
-        })
-      ) : (
-        <div className="mt-4">No Books found!</div>
-      )}
+      <BookSearchResults books={books} applicationState={applicationState} />
     </div>
   );
 }

@@ -5,9 +5,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     fetch(fullUrl)
       .then((response) => response.json())
       .then((data) => {
-        sendResponse({ success: true, data: data });
+        sendResponse({ success: true, books: data.books });
       })
-      .catch((error) => {
+      .catch(() => {
         sendResponse({ success: false, error: "Failed to fetch data" });
       });
 

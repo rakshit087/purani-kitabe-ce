@@ -7,6 +7,7 @@ function App() {
   const [applicationState, setApplicationState] = useState<
     "idle" | "loading" | "error" | "success"
   >("idle");
+  const [searchQuery, setsearchQuery] = useState<string>("");
 
   useEffect(() => {
     chrome.storage.local.get(["state"], (result) => {
@@ -17,6 +18,9 @@ function App() {
         if (result.state.books) {
           setBooks(result.state.books);
         }
+        if (result.state.searchQuery) {
+          setsearchQuery(result.state.searchQuery);
+        }
       }
     });
     const listener = (changes: {
@@ -26,6 +30,7 @@ function App() {
       if (changes.state) {
         setBooks(changes.state.newValue.books);
         setApplicationState(changes.state.newValue.applicationState);
+        setsearchQuery(changes.state.newValue.searchQuery);
       }
     };
     chrome.storage.onChanged.addListener(listener);
@@ -37,7 +42,11 @@ function App() {
   return (
     <div className="min-w-80 flex flex-col justify-center items-center py-4 px-4">
       <h1 className="text-3xl font-bold underline">पुरानी Kitabe</h1>
-      <BookSearchResults books={books} applicationState={applicationState} />
+      <BookSearchResults
+        books={books}
+        applicationState={applicationState}
+        searchQuery={searchQuery}
+      />
     </div>
   );
 }

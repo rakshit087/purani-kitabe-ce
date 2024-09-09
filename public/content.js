@@ -48,31 +48,38 @@ function extractProductDetails() {
           },
         },
         (response) => {
-          chrome.storage.local.set(
-            {
-              state: {
-                applicationState: response.success ? "success" : "error",
-                searchQuery: bookTitle.trim(),
-                books: response.books,
-              },
+          chrome.storage.local.set({
+            state: {
+              applicationState: response.success ? "success" : "error",
+              searchQuery: bookTitle.trim(),
+              books: response.books,
             },
-            () => {
-              chrome.action.setBadgeText({
-                text: response.books.length,
-              });
-            }
-          );
+          });
+          chrome.action.setBadgeText({
+            text: response.books.length,
+          });
         }
       );
     } else {
-      chrome.storage.local.remove("state", () => {
-        chrome.action.setBadgeText({
-          text: "",
-        });
+      chrome.storage.local.set({
+        state: {
+          applicationState: "idle",
+          searchQuery: "",
+          books: [],
+        },
       });
     }
   }
 }
+
+function handleMessage(request, sender, sendResponse) {
+  if (request.action === "refreshProductDetails") {
+    extractProductDetails();
+    sendResponse({ success: true });
+  }
+}
+
+chrome.runtime.onMessage.addListener(handleMessage);
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", extractProductDetails);

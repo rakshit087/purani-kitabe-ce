@@ -48,7 +48,10 @@ const BookSearchResults = ({
         </div>
       ) : (
         <div className="mt-4 flex justify-center items-center flex-col">
-          <p className="text-lg mb-4">{searchQuery} not found!</p>
+          <p className="text-base text-center mb-4">
+            {searchQuery.substring(0, 24)} {searchQuery.length > 24 && "..."}{" "}
+            not found!
+          </p>
           <RefreshButton />
         </div>
       );

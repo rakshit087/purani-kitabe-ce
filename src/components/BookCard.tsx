@@ -10,7 +10,16 @@ export function BookCard({ book }: BookCardI) {
   return (
     <div className="flex gap-4 w-full mt-8">
       <div className="min-h-[100px] min-w-[75px] rounded-xl flex justify-center items-center">
-        <img src={book.bookCover} alt={book.title} width={150} height={175} />
+        <img
+          src={book.bookCover}
+          alt={book.title}
+          width={150}
+          height={175}
+          onError={(e: React.ChangeEvent<HTMLImageElement>) => {
+            e.target.src =
+              "https://placehold.co/600x700?text=Book+Cover+Not+Found";
+          }}
+        />
       </div>
       <div className="flex-1 flex flex-col justify-between">
         <div>

@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "makeRequest") {
-    const baseUrl = "https://puranikitabay.vercel.app/api/search";
+    const baseUrl = "https://puranikitabe.in/api/search";
     const fullUrl = `${baseUrl}?q=${request.query.title.trim()}`;
     fetch(fullUrl)
       .then((response) => response.json())
